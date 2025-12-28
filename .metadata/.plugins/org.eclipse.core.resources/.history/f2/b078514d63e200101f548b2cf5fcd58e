@@ -1,7 +1,0 @@
-package com.aman.employee_service.service.impl;
-
-import com.aman.employee_service.service.EmployeeService;
-
-public class EmployeeServiceImpl implements EmployeeService{
-
-}

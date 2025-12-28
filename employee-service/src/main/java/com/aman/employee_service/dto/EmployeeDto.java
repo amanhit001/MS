@@ -1,5 +1,9 @@
 package com.aman.employee_service.dto;
 
+import java.util.List;
+
+import com.aman.employee_service.entity.Address;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +20,6 @@ public class EmployeeDto {
     private String email;
     private String departmentCode;
     private String organizationCode;
+    private List<Address> addresses;
 }
 

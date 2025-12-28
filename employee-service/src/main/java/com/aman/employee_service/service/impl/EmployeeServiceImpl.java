@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.aman.employee_service.dto.APIResponseDto;
 import com.aman.employee_service.dto.DepartmentDto;
@@ -14,6 +14,7 @@ import com.aman.employee_service.mapper.EmployeeMapper;
 import com.aman.employee_service.repository.EmployeeRepository;
 import com.aman.employee_service.service.EmployeeService;
 
+import jakarta.persistence.CacheRetrieveMode;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -22,7 +23,8 @@ public class EmployeeServiceImpl implements EmployeeService{
 	
 	private EmployeeRepository employeeRepo;
 	
-	private RestTemplate restTemplate;
+	//private RestTemplate restTemplate;
+	WebClient webClient;
 	
 	
 	@Override
@@ -45,8 +47,12 @@ public class EmployeeServiceImpl implements EmployeeService{
 		Employee foundEmployee = findById.get();
 		
 		//Now get the Department detail via RestTemplate
-		ResponseEntity<DepartmentDto> responsefoundDepartmentDto = restTemplate.getForEntity("http://localhost:8093/department/code/"+foundEmployee.getDepartmentCode(),  DepartmentDto.class);
-		DepartmentDto foundDepartmentDto = responsefoundDepartmentDto.getBody();
+//		ResponseEntity<DepartmentDto> responsefoundDepartmentDto = restTemplate.getForEntity("http://localhost:8093/department/code/"+foundEmployee.getDepartmentCode(),  DepartmentDto.class);
+//		DepartmentDto foundDepartmentDto = responsefoundDepartmentDto.getBody();
+		
+		DepartmentDto foundDepartmentDto = webClient.get()
+		.uri("http://localhost:8093/department/code/"+foundEmployee.getDepartmentCode())
+			.retrieve().bodyToMono(DepartmentDto.class).block();
 		EmployeeDto mappedEmployeeDto = EmployeeMapper.mapToEmployeeDto(foundEmployee);
 
 		APIResponseDto apiResponseDto = new APIResponseDto();

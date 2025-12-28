@@ -29,7 +29,7 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("{eid}")
-	public ResponseEntity<APIResponseDto> findEmployeeById(@PathVariable("eid") Long id){
+	public ResponseEntity<APIResponseDto> findEmployeeByCode(@PathVariable("eid")Long id){
 		APIResponseDto findEmployeeById = employeeService.findEmployeeById(id);
 		return new ResponseEntity<>(findEmployeeById,HttpStatus.OK);
 	}

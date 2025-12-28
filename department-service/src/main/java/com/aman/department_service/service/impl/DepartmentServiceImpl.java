@@ -38,5 +38,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 		DepartmentDto mappedSavedDepartmentDto = DepartmentMapper.mapToDepartmentDto(foundDepartment);
 		return mappedSavedDepartmentDto;
 	}
+	@Override
+	public DepartmentDto findViaDepartmentCode(String deptCode) {
+		return departmentRepo.findByDepartmentCode(deptCode)
+	            .map(DepartmentMapper::mapToDepartmentDto)
+	            .orElseThrow(() ->
+	                    new RuntimeException("No department found with code " + deptCode));
+	}
+	
 
 }

@@ -2,9 +2,12 @@ package com.aman.employee_service.service.impl;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.aman.employee_service.dto.APIResponseDto;
+import com.aman.employee_service.dto.DepartmentDto;
 import com.aman.employee_service.dto.EmployeeDto;
 import com.aman.employee_service.entity.Employee;
 import com.aman.employee_service.mapper.EmployeeMapper;
@@ -17,8 +20,10 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService{
 	
-	@Autowired
-	EmployeeRepository employeeRepo;
+	private EmployeeRepository employeeRepo;
+	
+	private RestTemplate restTemplate;
+	
 	
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
@@ -35,11 +40,19 @@ public class EmployeeServiceImpl implements EmployeeService{
 	}
 
 	@Override
-	public EmployeeDto findEmployeeById(Long id) {
+	public APIResponseDto findEmployeeById(Long id) {
 		Optional<Employee> findById = employeeRepo.findById(id);
 		Employee foundEmployee = findById.get();
+		
+		//Now get the Department detail via RestTemplate
+		ResponseEntity<DepartmentDto> responsefoundDepartmentDto = restTemplate.getForEntity("http://localhost:8093/department/code/"+foundEmployee.getDepartmentCode(),  DepartmentDto.class);
+		DepartmentDto foundDepartmentDto = responsefoundDepartmentDto.getBody();
 		EmployeeDto mappedEmployeeDto = EmployeeMapper.mapToEmployeeDto(foundEmployee);
-		return mappedEmployeeDto;
+
+		APIResponseDto apiResponseDto = new APIResponseDto();
+		apiResponseDto.setDepartment(foundDepartmentDto);
+		apiResponseDto.setEmployee(mappedEmployeeDto);
+		return apiResponseDto;
 		
 	}
 

@@ -28,10 +28,17 @@ public class DepartmentController {
 		return new ResponseEntity<>(savedDepartmentDto,HttpStatus.OK);
 	}
 	
-	@GetMapping("{DeptId}")
-	public ResponseEntity<DepartmentDto> findByIdDepartment(@PathVariable("DeptId") Long id){
+	@GetMapping("id/{deptid}")
+	public ResponseEntity<DepartmentDto> findByIdDepartment(@PathVariable("deptid") Long id){
 		DepartmentDto foundByIdDepartment = departmentService.findByIdDepartment(id);
 		return new ResponseEntity<>(foundByIdDepartment,HttpStatus.OK);
+	}
+	
+	@GetMapping("code/{deptCode}")
+	public ResponseEntity<DepartmentDto> findByDeptCode(@PathVariable("deptCode") String depCode)
+	{
+		DepartmentDto foundViaDepartmentCodeDto = departmentService.findViaDepartmentCode(depCode);
+		return ResponseEntity.ok(foundViaDepartmentCodeDto);
 	}
 
 }
